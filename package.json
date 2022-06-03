@@ -24,7 +24,6 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "mocha -r ts-node/register ./test/*.ts --recursive --timeout 5000",
-    "test-ts": "ts-mocha --color",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

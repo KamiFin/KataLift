@@ -5,20 +5,21 @@ import { Directions } from '../src/constants/directions';
 import { movementSystemInAction, nearestLifts, reverseFloors } from '../src/utils';
 
 describe('LiftSystemPrinter', function () {
-  it('No lifts', function () {
+  it.skip('No lifts', function () {
       const floors: number[] = [0, 1, 2, 3];
       const movementSystem: MovementSystem = {floors, lifts: [], requests: []}
+      console.log(print(movementSystem, true))
       verify(print(movementSystem, true));
   });
 
-  it('Lift no doors', function () {
+  it.skip('Lift no doors', function () {
       const lift: Lift = { id: "0", floorNumber: 0, floorRequest: [2, 3], isDoorsOpen: false };
       const floors: number[] = [0, 1, 2, 3];
       const movementSystem: MovementSystem = {floors, lifts: [lift], requests: []}
      verify(printWithoutDoors(movementSystem));
   });
 
-  it('Movement system with 4 lifts', function () {
+  it.skip('Movement system with 4 lifts', function () {
       const lift1: Lift = { id: "0", floorNumber: 3, floorRequest: [0], isDoorsOpen: false };
       const lift2: Lift ={ id: "2", floorNumber: 2,  floorRequest: [], isDoorsOpen: true};
       const lift3 : Lift ={ id: "3", floorNumber: 2, floorRequest: [], isDoorsOpen: false };
@@ -65,9 +66,29 @@ describe('LiftSystemPrinter', function () {
         {floorNumber: 5, direction: Directions.UP},
         {floorNumber: -1,direction: Directions.UP},
     ];
+
     const movementSystem : MovementSystem = {floors, lifts, requests};
     console.log(print(movementSystem, true))
-    // console.log(print(movementSystemInAction(movementSystem), true));
+    let loop = true;
+    let afterMove = {...movementSystem};
+    for (let i = 0; i < 10; i++) {    
+      afterMove = movementSystemInAction({...afterMove});
+      let totRequest = 0;
+      
+      totRequest = afterMove.requests.length;
+      afterMove.lifts.forEach((lift) => {
+        totRequest += lift.floorRequest.length;
+      });
+      console.log(print(afterMove, true))
+      loop = totRequest > 0;
+    }
+    
+    // const firstMove = movementSystemInAction(movementSystem);
+    // console.log(print(firstMove, true));
+    // const secondMove = movementSystemInAction(firstMove);
+    // console.log(print(secondMove, true));
+    // const thirdMove = movementSystemInAction(secondMove);
+    // console.log(print(thirdMove, true));
     verify(print(movementSystem, true));
 
     

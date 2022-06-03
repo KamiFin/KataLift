@@ -18,8 +18,9 @@ function printLift(lift: Lift, floor: number, withDoors: boolean): string {
         } else {
             return " ]" + lift.id + "[";
         }
-    }
-    else {
+    } else if(lift.isOpeningDoors && withDoors) {
+        return "DING";
+    } else {
         if (floorRequestIsPresent(lift, floor)) {
             return withDoors ? "[*" + lift.id + "]" : "*" + lift.id;
         } else {
