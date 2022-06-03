@@ -4,18 +4,20 @@ export type Lift = {
   id: string,
   floorNumber: number,
   floorRequest: number[],
-  isDoorsOpen: boolean
+  isDoorsOpen: boolean,
+  isOpeningDoors?: boolean
 };
 
 export type MovementSystem = {
   floors: number[],
-  movements: Lift[],
+  lifts: Lift[],
   requests: RequestFloor[]
 };
 
 export type RequestFloor = {
   floorNumber: number,
-  direction: Directions
+  direction: Directions,
+  liftId?: string
 }
 
 

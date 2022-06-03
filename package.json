@@ -10,6 +10,10 @@
     "@types/node": "^16.11.36",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.5",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
+    "jsdom": "^19.0.0",
+    "jsdom-global": "^3.0.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-scripts": "5.0.1",
@@ -19,7 +23,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "nyc ./node_modules/.bin/_mocha 'test/**/*.unit.test.ts'",
+    "test": "mocha -r ts-node/register ./test/*.ts --recursive --timeout 5000",
+    "test-ts": "ts-mocha --color",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -41,12 +46,16 @@
     ]
   },
   "devDependencies": {
-    "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@testdeck/mocha": "^0.2.0",
+    "@types/chai": "^4.3.1",
+    "@types/enzyme": "^3.10.12",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/jsdom": "^16.2.14",
+    "@types/mocha": "^9.1.1",
+    "@types/sinon": "^10.0.11",
+    "approvals": "^4.0.0-beta.1",
     "chai": "^4.3.6",
     "mocha": "^10.0.0",
-    "nyc": "^15.1.0",
-    "source-map-support": "^0.5.21",
     "ts-mockito": "^2.6.1",
     "ts-node": "^10.8.0",
     "tsconfig-paths": "^4.0.0"

@@ -7,12 +7,12 @@ import { filterQueue, floorRequestIsPresent, reverseFloors } from '../../src/uti
 const _should = _chai.should();
 export const should = _should;
 
-function getWhitespace(length: number) {
+function getWhitespace(length: number): string {
     return " ".repeat(Math.max(0, length));
 }
 
-function printLift (lift: Lift, floor: number) {
-    if (lift.isDoorsOpen) {
+function printLift(lift: Lift, floor: number, withDoors: boolean): string {
+    if (lift.isDoorsOpen && withDoors) {
         if (floorRequestIsPresent(lift, floor)) {
             return "]*" + lift.id + "[";
         } else {
@@ -21,76 +21,77 @@ function printLift (lift: Lift, floor: number) {
     }
     else {
         if (floorRequestIsPresent(lift, floor)) {
-            return "[*" + lift.id + "]";
+            return withDoors ? "[*" + lift.id + "]" : "*" + lift.id;
         } else {
-            return " [" + lift.id + "]";
+            return withDoors ? " [" + lift.id + "]" : lift.id + " ";
         }
     }
 }
 
-export function printLiftFloor(lift: Lift, floor: number) {
+export function printLiftFloor(lift: Lift, floor: number, withDoors: boolean): string {
     if (lift.floorNumber === floor) {
-        return printLift(lift, floor);
+        return printLift(lift, floor, withDoors);
     }
     
-    const padding = getWhitespace(lift.id.length);
+    const padding: string = getWhitespace(lift.id.length);
     if (floorRequestIsPresent(lift, floor)) {
-        return "  *" + padding;
+        return (withDoors ? "  *" : "*") + padding;
     } else {
-        return "   " + padding;
+        return (withDoors ? "   " : " ") + padding;
     }
 }
 
-function calculateFloorLength (floors: number[]) {
+function calculateFloorLength (floors: number[]) : number {
     if (floors.length === 0) {
         throw new Error("InvalidArgumentExcpetion: Must have at least one floor");
     }
 
-    const highestFloor = Math.max(...floors);
-    const lowestFloor = Math.min(...floors);
-    const highestFloorNameLength = highestFloor.toString().length;
-    const lowestFloorNameLength = lowestFloor.toString().length;
+    const highestFloor: number = Math.max(...floors);
+    const lowestFloor: number = Math.min(...floors);
+    const highestFloorNameLength: number = highestFloor.toString().length;
+    const lowestFloorNameLength: number = lowestFloor.toString().length;
     return Math.max(highestFloorNameLength, lowestFloorNameLength);
 }
 
-function printCallDirection (request: RequestFloor) {
+function printCallDirection (request: RequestFloor): string {
     switch (request.direction) {
         case Directions.DOWN:
-            return "vv DOWN vv";
+            return "v";
         case Directions.UP:
-            return "^^ UP ^^";
+            return "^";
         default:
             return " ";
     }
 }
 
-export function print(movementSystem: MovementSystem) {
-    const builder = [];
-    const floorLength = calculateFloorLength(reverseFloors(movementSystem));
-    reverseFloors(movementSystem).forEach((floor) => {
+export function print(movementSystem: MovementSystem, withDoors: boolean): string {
+    const builder: string[] = [];
+    const reverse = reverseFloors(movementSystem);
+    const floorLength = calculateFloorLength(reverse);
+    reverse.forEach((floor) => {
         const floorPadding: string = getWhitespace(floorLength - floor.toString().length);
         builder.push(floorPadding);
-        builder.push(floor);
+        builder.push(floor.toString());
 
-        const calls = filterQueue(movementSystem, floor)
+        const requests = filterQueue(movementSystem, floor)
             .map(printCallDirection)
             .join("");
         // if there are less than 2 calls on a floor we add padding to keep everything aligned
-        const callPadding = getWhitespace(2 - calls.length);
+        const requestPadding = getWhitespace(2 - requests.length);
         builder.push(" ");
-        builder.push(calls);
-        builder.push(callPadding);
+        builder.push(requests);
+        builder.push(requestPadding);
 
         builder.push(" ");
-        const lifts = movementSystem.movements
-            .map(lift => printLiftFloor(lift, floor))
+        const lifts = movementSystem.lifts
+            .map((lift) => printLiftFloor(lift, floor, withDoors))
             .join(" ");
             builder.push(lifts);
 
         // put the floor number at both ends of the line to make it more readable when there are lots of lifts,
         // and to prevent the IDE from doing rstrip on save and messing up the approved files.
         builder.push(floorPadding);
-        builder.push(floor);
+        builder.push(floor.toString());
 
         builder.push('\n');
     });
@@ -98,6 +99,6 @@ export function print(movementSystem: MovementSystem) {
     return builder.join("");
 }
 
-export function printWithoutDoors (movementSystem: MovementSystem) {
-    print(movementSystem);
+export function printWithoutDoors (movementSystem: MovementSystem): string {
+    return print(movementSystem, false);
 }

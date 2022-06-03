@@ -3,7 +3,7 @@ import { useContext, createContext, Dispatch } from "react";
 import { Lift, MovementSystem } from "../types/Lift";
 
 export const LiftContext = createContext<[MovementSystem, Dispatch<{ type: string; payload: any }>]>([
-  {floors: [], movements:[], requests: []},
+  {floors: [], lifts:[], requests: []},
   () => null,
 ]);
 
@@ -18,7 +18,7 @@ export const liftReducers = (state: MovementSystem, actions: { type: string; pay
 
     case "ADD_MOVEMENT": {
       const cpyState: MovementSystem = {...state};
-      cpyState.movements = [...cpyState.movements,
+      cpyState.lifts = [...cpyState.lifts,
           actions.payload]
       return cpyState;
     }
