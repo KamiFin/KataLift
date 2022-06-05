@@ -68,28 +68,18 @@ describe('LiftSystemPrinter', function () {
     ];
 
     const movementSystem : MovementSystem = {floors, lifts, requests};
+    verify(print(movementSystem, true));
+
     console.log(print(movementSystem, true))
-    let loop = true;
     let afterMove = {...movementSystem};
     for (let i = 0; i < 10; i++) {    
       afterMove = movementSystemInAction({...afterMove});
-      let totRequest = 0;
-      
-      totRequest = afterMove.requests.length;
-      afterMove.lifts.forEach((lift) => {
-        totRequest += lift.floorRequest.length;
-      });
+  
       console.log(print(afterMove, true))
-      loop = totRequest > 0;
+      verify(print(afterMove, true));
     }
     
-    // const firstMove = movementSystemInAction(movementSystem);
-    // console.log(print(firstMove, true));
-    // const secondMove = movementSystemInAction(firstMove);
-    // console.log(print(secondMove, true));
-    // const thirdMove = movementSystemInAction(secondMove);
-    // console.log(print(thirdMove, true));
-    verify(print(movementSystem, true));
+    
 
     
 });
